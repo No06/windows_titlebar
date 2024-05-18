@@ -1,7 +1,8 @@
 name: windows_titlebar
 description: "A new Flutter package project."
 version: 0.0.1
-homepage:
+homepage: https://github.com/No06/windows_titlebar
+license: BSD-3-Clause
 
 environment:
   sdk: '>=3.4.0 <4.0.0'
