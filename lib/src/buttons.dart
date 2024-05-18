@@ -5,8 +5,8 @@ import 'package:windows_titlebar/src/icons.dart';
 
 const kWindowTitleBarHeight = kWindowCaptionHeight;
 
-class WindowTitleBarButton extends StatefulWidget {
-  const WindowTitleBarButton({
+class WindowButton extends StatefulWidget {
+  const WindowButton({
     super.key,
     required this.icon,
     this.onTap,
@@ -15,7 +15,7 @@ class WindowTitleBarButton extends StatefulWidget {
   })  : _type = null,
         buttonColor = null;
 
-  const WindowTitleBarButton.close({
+  const WindowButton.close({
     super.key,
     this.onTap,
     this.color = const Color(0x00000000),
@@ -24,7 +24,7 @@ class WindowTitleBarButton extends StatefulWidget {
   })  : _type = _ButtonType.close,
         icon = null;
 
-  const WindowTitleBarButton.unmaximize({
+  const WindowButton.unmaximize({
     super.key,
     this.onTap,
     this.color = const Color(0x00000000),
@@ -33,7 +33,7 @@ class WindowTitleBarButton extends StatefulWidget {
   })  : _type = _ButtonType.unmaximize,
         icon = null;
 
-  const WindowTitleBarButton.maximize({
+  const WindowButton.maximize({
     super.key,
     this.onTap,
     this.color = const Color(0x00000000),
@@ -42,7 +42,7 @@ class WindowTitleBarButton extends StatefulWidget {
   })  : _type = _ButtonType.maximize,
         icon = null;
 
-  const WindowTitleBarButton.minimize({
+  const WindowButton.minimize({
     super.key,
     this.onTap,
     this.color = const Color(0x00000000),
@@ -61,10 +61,10 @@ class WindowTitleBarButton extends StatefulWidget {
   static const animatedTime = 120;
 
   @override
-  State<WindowTitleBarButton> createState() => _WindowTitleBarButtonState();
+  State<WindowButton> createState() => _WindowButtonState();
 }
 
-class _WindowTitleBarButtonState extends State<WindowTitleBarButton> {
+class _WindowButtonState extends State<WindowButton> {
   Color get _backgroundColor {
     if (state.onTap) return widget.buttonColor!.mouseDown;
     if (state.isHover) return widget.buttonColor!.mouseOver;
@@ -90,9 +90,8 @@ class _WindowTitleBarButtonState extends State<WindowTitleBarButton> {
     }
   }
 
-  Duration get _duration => widget.animated
-      ? const Duration(milliseconds: WindowTitleBarButton.animatedTime)
-      : Duration.zero;
+  Duration get _duration =>
+      widget.animated ? const Duration(milliseconds: WindowButton.animatedTime) : Duration.zero;
 
   final state = _ButtonState();
 
