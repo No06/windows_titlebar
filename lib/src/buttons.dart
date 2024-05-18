@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:windows_titlebar/src/color.dart';
@@ -15,60 +13,48 @@ class WindowTitleBarButton extends StatefulWidget {
     this.color = const Color(0x00000000),
     this.animated = false,
   })  : _type = null,
-        brightness = null,
-        iconColor = null,
-        darkIconColor = null;
+        buttonColor = null;
 
   const WindowTitleBarButton.close({
     super.key,
-    this.brightness = Brightness.light,
     this.onTap,
     this.color = const Color(0x00000000),
-    this.iconColor = const WindowTitleBarButtonColor.closeLight(),
-    this.darkIconColor = const WindowTitleBarButtonColor.closeDark(),
+    this.buttonColor = const WindowButtonColor.closeLight(),
     this.animated = false,
   })  : _type = _ButtonType.close,
         icon = null;
 
   const WindowTitleBarButton.unmaximize({
     super.key,
-    this.brightness = Brightness.light,
     this.onTap,
     this.color = const Color(0x00000000),
-    this.iconColor = const WindowTitleBarButtonColor.light(),
-    this.darkIconColor = const WindowTitleBarButtonColor.dark(),
+    this.buttonColor = const WindowButtonColor.light(),
     this.animated = false,
   })  : _type = _ButtonType.unmaximize,
         icon = null;
 
   const WindowTitleBarButton.maximize({
     super.key,
-    this.brightness = Brightness.light,
     this.onTap,
     this.color = const Color(0x00000000),
-    this.iconColor = const WindowTitleBarButtonColor.light(),
-    this.darkIconColor = const WindowTitleBarButtonColor.dark(),
+    this.buttonColor = const WindowButtonColor.light(),
     this.animated = false,
   })  : _type = _ButtonType.maximize,
         icon = null;
 
   const WindowTitleBarButton.minimize({
     super.key,
-    this.brightness = Brightness.light,
     this.onTap,
     this.color = const Color(0x00000000),
-    this.iconColor = const WindowTitleBarButtonColor.light(),
-    this.darkIconColor = const WindowTitleBarButtonColor.dark(),
+    this.buttonColor = const WindowButtonColor.light(),
     this.animated = false,
   })  : _type = _ButtonType.minimize,
         icon = null;
 
-  final Brightness? brightness;
   final Widget? icon;
   final VoidCallback? onTap;
   final Color? color;
-  final WindowTitleBarButtonColor? iconColor;
-  final WindowTitleBarButtonColor? darkIconColor;
+  final WindowButtonColor? buttonColor;
   final bool animated;
   final _ButtonType? _type;
 
@@ -79,25 +65,16 @@ class WindowTitleBarButton extends StatefulWidget {
 }
 
 class _WindowTitleBarButtonState extends State<WindowTitleBarButton> {
-  WindowTitleBarButtonColor get _color {
-    switch (widget.brightness!) {
-      case Brightness.dark:
-        return widget.darkIconColor!;
-      case Brightness.light:
-        return widget.iconColor!;
-    }
-  }
-
   Color get _backgroundColor {
-    if (state.onTap) return _color.mouseDown;
-    if (state.isHover) return _color.mouseOver;
-    return _color.normal;
+    if (state.onTap) return widget.buttonColor!.mouseDown;
+    if (state.isHover) return widget.buttonColor!.mouseOver;
+    return widget.buttonColor!.normal;
   }
 
   Color get _iconColor {
-    if (state.onTap) return _color.iconMouseDown;
-    if (state.isHover) return _color.iconMouseOver;
-    return _color.iconNormal;
+    if (state.onTap) return widget.buttonColor!.iconMouseDown;
+    if (state.isHover) return widget.buttonColor!.iconMouseOver;
+    return widget.buttonColor!.iconNormal;
   }
 
   Widget get _icon {
