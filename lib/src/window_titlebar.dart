@@ -5,11 +5,13 @@ class WindowTitleBar extends StatelessWidget {
     super.key,
     this.decoration,
     this.title,
+    this.padding,
     this.actions,
   });
 
   final BoxDecoration? decoration;
   final Widget? title;
+  final EdgeInsetsGeometry? padding;
   final List<Widget>? actions;
 
   @override
@@ -18,7 +20,7 @@ class WindowTitleBar extends StatelessWidget {
       children: [
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.only(left: 16),
+            padding: padding ?? const EdgeInsets.only(left: 16),
             child: title,
           ),
         ),
