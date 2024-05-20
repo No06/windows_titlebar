@@ -1,9 +1,8 @@
 import 'package:flutter/widgets.dart';
-import 'package:window_manager/window_manager.dart';
 import 'package:windows_titlebar/src/color.dart';
 import 'package:windows_titlebar/src/icons.dart';
 
-const kWindowTitleBarHeight = kWindowCaptionHeight;
+const kWindowTitleBarHeight = 32.0;
 
 class WindowButton extends StatefulWidget {
   const WindowButton({

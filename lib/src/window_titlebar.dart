@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:window_manager/window_manager.dart';
 
 class WindowTitleBar extends StatelessWidget {
   const WindowTitleBar({
@@ -18,16 +17,9 @@ class WindowTitleBar extends StatelessWidget {
     final widget = Row(
       children: [
         Expanded(
-          child: DragToMoveArea(
-            child: SizedBox.expand(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 16),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: title,
-                ),
-              ),
-            ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: title,
           ),
         ),
         ...?actions,
