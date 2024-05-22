@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:windows_titlebar/src/color.dart';
 import 'package:windows_titlebar/src/icons.dart';
-import 'package:windows_titlebar/windows_titlebar.dart';
 
 const kWindowTitleBarHeight = 32.0;
 
@@ -108,8 +107,9 @@ class _WindowButtonState extends State<WindowButton> {
     }
   }
 
-  Duration get _duration =>
-      widget.animated ? const Duration(milliseconds: WindowButton.animatedTime) : Duration.zero;
+  Duration get _duration => widget.animated
+      ? const Duration(milliseconds: WindowButton.animatedTime)
+      : Duration.zero;
 
   final state = _ButtonState();
 
