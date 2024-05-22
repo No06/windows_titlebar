@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:windows_titlebar/src/color.dart';
 import 'package:windows_titlebar/src/icons.dart';
@@ -10,15 +11,19 @@ class WindowButton extends StatefulWidget {
     required this.icon,
     this.onTap,
     this.color = const Color(0x00000000),
+    this.brightness = Brightness.light,
     this.animated = false,
   })  : _type = null,
-        buttonColor = null;
+        buttonColor = null,
+        darkButtonColor = null;
 
   const WindowButton.close({
     super.key,
     this.onTap,
     this.color = const Color(0x00000000),
+    this.brightness = Brightness.light,
     this.buttonColor = const WindowButtonColor.closeLight(),
+    this.darkButtonColor = const WindowButtonColor.closeDark(),
     this.animated = false,
   })  : _type = _ButtonType.close,
         icon = null;
@@ -27,7 +32,9 @@ class WindowButton extends StatefulWidget {
     super.key,
     this.onTap,
     this.color = const Color(0x00000000),
+    this.brightness = Brightness.light,
     this.buttonColor = const WindowButtonColor.light(),
+    this.darkButtonColor = const WindowButtonColor.dark(),
     this.animated = false,
   })  : _type = _ButtonType.unmaximize,
         icon = null;
@@ -36,7 +43,9 @@ class WindowButton extends StatefulWidget {
     super.key,
     this.onTap,
     this.color = const Color(0x00000000),
+    this.brightness = Brightness.light,
     this.buttonColor = const WindowButtonColor.light(),
+    this.darkButtonColor = const WindowButtonColor.dark(),
     this.animated = false,
   })  : _type = _ButtonType.maximize,
         icon = null;
@@ -45,7 +54,9 @@ class WindowButton extends StatefulWidget {
     super.key,
     this.onTap,
     this.color = const Color(0x00000000),
+    this.brightness = Brightness.light,
     this.buttonColor = const WindowButtonColor.light(),
+    this.darkButtonColor = const WindowButtonColor.dark(),
     this.animated = false,
   })  : _type = _ButtonType.minimize,
         icon = null;
@@ -53,7 +64,9 @@ class WindowButton extends StatefulWidget {
   final Widget? icon;
   final VoidCallback? onTap;
   final Color? color;
+  final Brightness brightness;
   final WindowButtonColor? buttonColor;
+  final WindowButtonColor? darkButtonColor;
   final bool animated;
   final _ButtonType? _type;
 
