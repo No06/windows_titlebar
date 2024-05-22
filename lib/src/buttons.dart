@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:windows_titlebar/src/color.dart';
 import 'package:windows_titlebar/src/icons.dart';
+import 'package:windows_titlebar/windows_titlebar.dart';
 
 const kWindowTitleBarHeight = 32.0;
 
@@ -77,16 +78,21 @@ class WindowButton extends StatefulWidget {
 }
 
 class _WindowButtonState extends State<WindowButton> {
+  WindowButtonColor get _buttonColor => switch (widget.brightness) {
+        Brightness.dark => widget.darkButtonColor!,
+        Brightness.light => widget.buttonColor!,
+      };
+
   Color get _backgroundColor {
-    if (state.onTap) return widget.buttonColor!.mouseDown;
-    if (state.isHover) return widget.buttonColor!.mouseOver;
-    return widget.buttonColor!.normal;
+    if (state.onTap) return _buttonColor.mouseDown;
+    if (state.isHover) return _buttonColor.mouseOver;
+    return _buttonColor.normal;
   }
 
   Color get _iconColor {
-    if (state.onTap) return widget.buttonColor!.iconMouseDown;
-    if (state.isHover) return widget.buttonColor!.iconMouseOver;
-    return widget.buttonColor!.iconNormal;
+    if (state.onTap) return _buttonColor.iconMouseDown;
+    if (state.isHover) return _buttonColor.iconMouseOver;
+    return _buttonColor.iconNormal;
   }
 
   Widget get _icon {
