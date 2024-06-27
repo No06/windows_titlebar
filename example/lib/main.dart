@@ -6,8 +6,11 @@ import 'package:windows_titlebar/windows_titlebar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await windowManager.ensureInitialized();
+  const windowSize = Size(500, 200);
   final windowOptions = WindowOptions(
+    size: windowSize,
     center: true,
     backgroundColor: Colors.transparent,
     skipTaskbar: false,
@@ -102,6 +105,14 @@ class _WindowTitleBarState extends State<_WindowTitleBar> with WindowListener {
         ),
       ),
       actions: [
+        // Custom Button
+        const WindowButton(
+          icon: Icon(Icons.settings),
+          color: Colors.blue,
+          mouseOverColor: Colors.green,
+          mouseDownColor: Colors.amber,
+          animated: true,
+        ),
         WindowButton.minimize(
           buttonColor: windowButtonColor,
           onTap: windowManager.minimize,
