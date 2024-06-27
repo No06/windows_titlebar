@@ -9,8 +9,12 @@ class WindowButton extends StatefulWidget {
     super.key,
     required this.icon,
     this.onTap,
-    this.animated = false,
+    this.color,
+    this.mouseOverColor,
+    this.mouseDownColor,
+    this.animated,
     this.animatedTime,
+    this.constraints,
   })  : _type = null,
         buttonColor = null;
 
@@ -18,79 +22,103 @@ class WindowButton extends StatefulWidget {
     super.key,
     this.onTap,
     this.buttonColor = const WindowButtonColor.closeLight(),
-    this.animated = false,
+    this.animated,
     this.animatedTime,
+    this.constraints,
   })  : _type = _ButtonType.close,
+        color = null,
+        mouseDownColor = null,
+        mouseOverColor = null,
         icon = null;
 
   const WindowButton.unmaximize({
     super.key,
     this.onTap,
     this.buttonColor = const WindowButtonColor.light(),
-    this.animated = false,
+    this.animated,
     this.animatedTime,
+    this.constraints,
   })  : _type = _ButtonType.unmaximize,
+        color = null,
+        mouseDownColor = null,
+        mouseOverColor = null,
         icon = null;
 
   const WindowButton.maximize({
     super.key,
     this.onTap,
     this.buttonColor = const WindowButtonColor.light(),
-    this.animated = false,
+    this.animated,
     this.animatedTime,
+    this.constraints,
   })  : _type = _ButtonType.maximize,
+        color = null,
+        mouseDownColor = null,
+        mouseOverColor = null,
         icon = null;
 
   const WindowButton.minimize({
     super.key,
     this.onTap,
     this.buttonColor = const WindowButtonColor.light(),
-    this.animated = false,
+    this.animated,
     this.animatedTime,
+    this.constraints,
   })  : _type = _ButtonType.minimize,
+        color = null,
+        mouseOverColor = null,
+        mouseDownColor = null,
         icon = null;
 
   final Widget? icon;
   final VoidCallback? onTap;
+  final Color? color;
+  final Color? mouseOverColor;
+  final Color? mouseDownColor;
   final WindowButtonColor? buttonColor;
-  final bool animated;
+  final bool? animated;
   final int? animatedTime;
   final _ButtonType? _type;
+  final BoxConstraints? constraints;
 
   @override
   State<WindowButton> createState() => _WindowButtonState();
 }
 
 class _WindowButtonState extends State<WindowButton> {
-  late final presetButtonColor =
+  late final buttonColor =
       widget.buttonColor ?? const WindowButtonColor.light();
 
-  Color get presetBackgroundColor {
-    if (state.onTap) return presetButtonColor.mouseDown;
-    if (state.isHover) return presetButtonColor.mouseOver;
-    return presetButtonColor.normal;
+  Color get backgroundColor {
+    if (state.onTap) {
+      return widget.mouseDownColor ?? buttonColor.mouseDown;
+    }
+    if (state.isHover) {
+      return widget.mouseOverColor ?? buttonColor.mouseOver;
+    }
+    return widget.color ?? buttonColor.normal;
   }
 
-  Color get presetIconColor {
-    if (state.onTap) return presetButtonColor.iconMouseDown;
-    if (state.isHover) return presetButtonColor.iconMouseOver;
-    return presetButtonColor.iconNormal;
+  Color get iconColor {
+    if (state.onTap) return buttonColor.iconMouseDown;
+    if (state.isHover) return buttonColor.iconMouseOver;
+    return buttonColor.iconNormal;
   }
 
-  Widget get presetIcon {
+  Widget get defaultIcon {
     switch (widget._type!) {
       case _ButtonType.close:
-        return CloseIcon(color: presetIconColor);
+        return CloseIcon(color: iconColor);
       case _ButtonType.unmaximize:
-        return RestoreIcon(color: presetIconColor);
+        return RestoreIcon(color: iconColor);
       case _ButtonType.maximize:
-        return MaximizeIcon(color: presetIconColor);
+        return MaximizeIcon(color: iconColor);
       case _ButtonType.minimize:
-        return MinimizeIcon(color: presetIconColor);
+        return MinimizeIcon(color: iconColor);
     }
   }
 
-  Duration get _duration => widget.animated
+  Duration get _duration => widget.animated ?? false
       ? Duration(milliseconds: widget.animatedTime ?? 120)
       : Duration.zero;
 
@@ -112,9 +140,11 @@ class _WindowButtonState extends State<WindowButton> {
           builder: (context, child) => AnimatedContainer(
             duration: _duration,
             curve: Curves.linear,
-            color: presetBackgroundColor,
-            constraints: const BoxConstraints(minWidth: 46, minHeight: 32),
-            child: Center(child: widget.icon ?? presetIcon),
+            color: backgroundColor,
+            constraints: widget.constraints ??
+                const BoxConstraints(
+                    minWidth: 46, minHeight: kWindowTitleBarHeight),
+            child: Center(child: widget.icon ?? defaultIcon),
           ),
         ),
       ),
