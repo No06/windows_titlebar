@@ -18,11 +18,13 @@ class WindowTitleBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final widget = Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Expanded(
+        Flexible(
           child: DragToMoveArea(
-            child: Padding(
-              padding: padding ?? const EdgeInsets.only(left: 16),
+            child: SizedBox(
+              width: double.infinity,
+              height: double.infinity,
               child: title,
             ),
           ),
