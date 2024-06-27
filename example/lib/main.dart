@@ -94,10 +94,16 @@ class _WindowTitleBarState extends State<_WindowTitleBar> with WindowListener {
     }();
 
     return WindowTitleBar(
-      title: const SizedBox(width: double.infinity),
+      title: const Padding(
+        padding: EdgeInsets.only(left: 16),
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Text("Window Title"),
+        ),
+      ),
       actions: [
         WindowButton.minimize(
-          color: windowButtonColor,
+          buttonColor: windowButtonColor,
           onTap: windowManager.minimize,
         ),
         FutureBuilder(
@@ -108,19 +114,19 @@ class _WindowTitleBarState extends State<_WindowTitleBar> with WindowListener {
               isMaximized = isMaximized ??= snapshot.hasData && snapshot.data!;
               if (isMaximized) {
                 return WindowButton.unmaximize(
-                  color: windowButtonColor,
+                  buttonColor: windowButtonColor,
                   onTap: windowManager.unmaximize,
                 );
               }
               return WindowButton.maximize(
-                color: windowButtonColor,
+                buttonColor: windowButtonColor,
                 onTap: windowManager.maximize,
               );
             },
           ),
         ),
         WindowButton.close(
-          color: closeWindowButtonColor,
+          buttonColor: closeWindowButtonColor,
           onTap: windowManager.close,
         ),
       ],
