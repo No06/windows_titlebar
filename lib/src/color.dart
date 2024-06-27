@@ -46,12 +46,6 @@ class WindowButtonColor {
     this.iconMouseDown = const Color(0xFFFFFFFF),
   });
 
-  factory WindowButtonColor.adaptive(Brightness brightness) {
-    return brightness == Brightness.light
-        ? const WindowButtonColor.light()
-        : const WindowButtonColor.dark();
-  }
-
   final Color normal;
   final Color mouseOver;
   final Color mouseDown;
