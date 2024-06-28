@@ -52,7 +52,7 @@ class _MaximizePainter extends _IconPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawRect(Rect.fromLTRB(0, 0, size.width - 1, size.height - 1), p);
+    canvas.drawRect(Rect.fromLTRB(1, 0, size.width, size.height - 1), p);
   }
 }
 
