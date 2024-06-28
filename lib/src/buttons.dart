@@ -96,7 +96,7 @@ class _WindowButtonState extends State<WindowButton> {
   Widget build(BuildContext context) {
     final buttonColor = widget.buttonColor ?? const WindowButtonColor.light();
 
-    Color backgroundColor = () {
+    backgroundColor() {
       if (state.onTap) {
         return widget.mouseDownColor ?? buttonColor.mouseDown;
       }
@@ -104,26 +104,28 @@ class _WindowButtonState extends State<WindowButton> {
         return widget.mouseOverColor ?? buttonColor.mouseOver;
       }
       return widget.color ?? buttonColor.normal;
-    }();
+    }
 
-    Color iconColor = () {
+    iconColor() {
       if (state.onTap) return buttonColor.iconMouseDown;
       if (state.isHover) return buttonColor.iconMouseOver;
       return buttonColor.iconNormal;
-    }();
+    }
 
-    Widget defaultIcon = () {
+    defaultIcon() {
       switch (widget._type!) {
         case _ButtonType.close:
-          return CloseIcon(color: iconColor);
+          return CloseIcon(color: iconColor());
         case _ButtonType.unmaximize:
-          return RestoreIcon(color: iconColor);
+          return RestoreIcon(color: iconColor());
         case _ButtonType.maximize:
-          return MaximizeIcon(color: iconColor);
+          return MaximizeIcon(color: iconColor());
         case _ButtonType.minimize:
-          return MinimizeIcon(color: iconColor);
+          return MinimizeIcon(color: iconColor());
       }
-    }();
+    }
+
+    ;
 
     return MouseRegion(
       onExit: (value) => state.isHover = false,
@@ -139,11 +141,11 @@ class _WindowButtonState extends State<WindowButton> {
           builder: (context, child) => AnimatedContainer(
             duration: _duration,
             curve: Curves.linear,
-            color: backgroundColor,
+            color: backgroundColor(),
             constraints: widget.constraints ??
                 const BoxConstraints(
                     minWidth: 46, minHeight: kWindowTitleBarHeight),
-            child: Center(child: widget.icon ?? defaultIcon),
+            child: Center(child: widget.icon ?? defaultIcon()),
           ),
         ),
       ),
