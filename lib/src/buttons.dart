@@ -86,38 +86,6 @@ class WindowButton extends StatefulWidget {
 }
 
 class _WindowButtonState extends State<WindowButton> {
-  late final buttonColor =
-      widget.buttonColor ?? const WindowButtonColor.light();
-
-  Color get backgroundColor {
-    if (state.onTap) {
-      return widget.mouseDownColor ?? buttonColor.mouseDown;
-    }
-    if (state.isHover) {
-      return widget.mouseOverColor ?? buttonColor.mouseOver;
-    }
-    return widget.color ?? buttonColor.normal;
-  }
-
-  Color get iconColor {
-    if (state.onTap) return buttonColor.iconMouseDown;
-    if (state.isHover) return buttonColor.iconMouseOver;
-    return buttonColor.iconNormal;
-  }
-
-  Widget get defaultIcon {
-    switch (widget._type!) {
-      case _ButtonType.close:
-        return CloseIcon(color: iconColor);
-      case _ButtonType.unmaximize:
-        return RestoreIcon(color: iconColor);
-      case _ButtonType.maximize:
-        return MaximizeIcon(color: iconColor);
-      case _ButtonType.minimize:
-        return MinimizeIcon(color: iconColor);
-    }
-  }
-
   Duration get _duration => widget.animated ?? false
       ? Duration(milliseconds: widget.animatedTime ?? 120)
       : Duration.zero;
@@ -126,6 +94,37 @@ class _WindowButtonState extends State<WindowButton> {
 
   @override
   Widget build(BuildContext context) {
+    final buttonColor = widget.buttonColor ?? const WindowButtonColor.light();
+
+    Color backgroundColor = () {
+      if (state.onTap) {
+        return widget.mouseDownColor ?? buttonColor.mouseDown;
+      }
+      if (state.isHover) {
+        return widget.mouseOverColor ?? buttonColor.mouseOver;
+      }
+      return widget.color ?? buttonColor.normal;
+    }();
+
+    Color iconColor = () {
+      if (state.onTap) return buttonColor.iconMouseDown;
+      if (state.isHover) return buttonColor.iconMouseOver;
+      return buttonColor.iconNormal;
+    }();
+
+    Widget defaultIcon = () {
+      switch (widget._type!) {
+        case _ButtonType.close:
+          return CloseIcon(color: iconColor);
+        case _ButtonType.unmaximize:
+          return RestoreIcon(color: iconColor);
+        case _ButtonType.maximize:
+          return MaximizeIcon(color: iconColor);
+        case _ButtonType.minimize:
+          return MinimizeIcon(color: iconColor);
+      }
+    }();
+
     return MouseRegion(
       onExit: (value) => state.isHover = false,
       onHover: (value) => state.isHover = true,
