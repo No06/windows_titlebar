@@ -52,7 +52,7 @@ class _MaximizePainter extends _IconPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawRect(Rect.fromLTRB(1, 1, size.width, size.height), p);
+    canvas.drawRect(Rect.fromLTRB(0, 0, size.width - 1, size.height - 1), p);
   }
 }
 
@@ -70,11 +70,16 @@ class _RestorePainter extends _IconPainter {
   @override
   void paint(Canvas canvas, Size size) {
     canvas.drawRect(Rect.fromLTRB(0, 2, size.width - 2, size.height), p);
-    canvas.drawLine(const Offset(2, 1), const Offset(2, 0), p);
+    // left
+    canvas.drawLine(const Offset(2, 1), const Offset(2, 2), p);
+    // top
     canvas.drawLine(const Offset(1, 0), Offset(size.width, 0), p);
-    canvas.drawLine(Offset(size.width, 0), Offset(size.width, size.height - 2), p);
+    // right
     canvas.drawLine(
-        Offset(size.width - 2, size.height - 2), Offset(size.width - 1, size.height - 2), p);
+        Offset(size.width, 0), Offset(size.width, size.height - 1), p);
+    // bottom
+    canvas.drawLine(Offset(size.width - 2, size.height - 2),
+        Offset(size.width - 1, size.height - 2), p);
   }
 }
 

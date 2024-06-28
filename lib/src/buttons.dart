@@ -125,8 +125,6 @@ class _WindowButtonState extends State<WindowButton> {
       }
     }
 
-    ;
-
     return MouseRegion(
       onExit: (value) => state.isHover = false,
       onHover: (value) => state.isHover = true,
