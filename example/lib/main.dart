@@ -97,11 +97,13 @@ class _WindowTitleBarState extends State<_WindowTitleBar> with WindowListener {
     }();
 
     return WindowTitleBar(
-      title: const Padding(
-        padding: EdgeInsets.only(left: 16),
+      title: const DragToMoveArea(
         child: Align(
           alignment: Alignment.centerLeft,
-          child: Text("Window Title"),
+          child: Padding(
+            padding: EdgeInsets.only(left: 16),
+            child: Text("Window Title"),
+          ),
         ),
       ),
       actions: [
