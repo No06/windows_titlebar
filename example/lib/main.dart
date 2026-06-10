@@ -26,12 +26,30 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  var _themeMode = ThemeMode.light;
+
+  void _toggleThemeMode() => setState(() {
+        _themeMode = switch (_themeMode) {
+          ThemeMode.light => ThemeMode.dark,
+          ThemeMode.dark => ThemeMode.light,
+          ThemeMode.system => ThemeMode.system,
+        };
+      });
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: _themeMode,
       home: Scaffold(
         appBar: const PreferredSize(
           preferredSize: Size.fromHeight(kWindowCaptionHeight),
@@ -39,7 +57,7 @@ class MyApp extends StatelessWidget {
         ),
         body: Center(
           child: TextButton(
-            onPressed: () {},
+            onPressed: _toggleThemeMode,
             child: const Text("Switch Theme"),
           ),
         ),
@@ -80,23 +98,15 @@ class _WindowTitleBarState extends State<_WindowTitleBar> with WindowListener {
 
   @override
   Widget build(BuildContext context) {
-    final windowButtonColor = () {
-      switch (Theme.of(context).brightness) {
-        case Brightness.dark:
-          return const WindowButtonColor.dark();
-        case Brightness.light:
-          return const WindowButtonColor.light();
-      }
-    }();
+    final windowButtonColor = switch (Theme.of(context).brightness) {
+      Brightness.dark => const WindowButtonColor.dark(),
+      Brightness.light => const WindowButtonColor.light(),
+    };
 
-    final closeWindowButtonColor = () {
-      switch (Theme.of(context).brightness) {
-        case Brightness.dark:
-          return const WindowButtonColor.closeDark();
-        case Brightness.light:
-          return const WindowButtonColor.closeLight();
-      }
-    }();
+    final closeWindowButtonColor = switch (Theme.of(context).brightness) {
+      Brightness.dark => const WindowButtonColor.closeDark(),
+      Brightness.light => const WindowButtonColor.closeLight(),
+    };
 
     return WindowTitleBar(
       title: const DragToMoveArea(
