@@ -69,17 +69,22 @@ class _RestorePainter extends _IconPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawRect(Rect.fromLTRB(0, 2, size.width - 2, size.height), p);
+    // 线条之间形成的直角有一个0.5像素的间距
+    const angleOffset = 0.25;
+    const gap = 2.0;
+
+    canvas.drawRect(Rect.fromLTRB(0, gap, size.width - gap, size.height), p);
     // left
-    canvas.drawLine(const Offset(2, 1), const Offset(2, 2), p);
+    canvas.drawLine(const Offset(gap, 0), const Offset(gap, gap), p);
     // top
-    canvas.drawLine(const Offset(1, 0), Offset(size.width, 0), p);
+    canvas.drawLine(const Offset(gap - angleOffset, 0),
+        Offset(size.width + angleOffset * 2, 0), p);
     // right
-    canvas.drawLine(
-        Offset(size.width, 0), Offset(size.width, size.height - 1), p);
+    canvas.drawLine(Offset(size.width, 0),
+        Offset(size.width, size.height - gap + angleOffset), p);
     // bottom
-    canvas.drawLine(Offset(size.width - 2, size.height - 2),
-        Offset(size.width - 1, size.height - 2), p);
+    canvas.drawLine(Offset(size.width - gap, size.height - gap),
+        Offset(size.width, size.height - gap), p);
   }
 }
 
