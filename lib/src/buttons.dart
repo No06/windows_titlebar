@@ -106,14 +106,32 @@ class _WindowButtonState extends State<WindowButton> {
 
     final Widget icon;
     if (widget.animated) {
-      icon = TweenAnimationBuilder(
-        tween: ColorTween(end: iconColor),
+      icon = AnimatedContainer(
         duration: widget.animationDuration,
-        builder: (context, color, child) =>
-            widget.builder(context, color ?? iconColor),
+        curve: widget.animationCurve,
+        color: backgroundColor,
+        constraints: widget.constraints,
+        child: Center(
+          child: TweenAnimationBuilder(
+            tween: ColorTween(end: iconColor),
+            duration: widget.animationDuration,
+            builder: (context, color, child) =>
+                widget.builder(context, color ?? iconColor),
+          ),
+        ),
       );
     } else {
-      icon = Builder(builder: (context) => widget.builder(context, iconColor));
+      icon = ColoredBox(
+        color: backgroundColor,
+        child: ConstrainedBox(
+          constraints: widget.constraints,
+          child: Center(
+            child: Builder(
+              builder: (context) => widget.builder(context, iconColor),
+            ),
+          ),
+        ),
+      );
     }
 
     return MouseRegion(
