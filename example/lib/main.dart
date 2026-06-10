@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -55,11 +56,12 @@ class _WindowTitleBar extends StatefulWidget {
 }
 
 class _WindowTitleBarState extends State<_WindowTitleBar> with WindowListener {
-  final isMaximized = ValueNotifier<bool?>(null);
+  late final ValueNotifier<FutureOr<bool>> isMaximized;
 
   @override
   void initState() {
     super.initState();
+    isMaximized = ValueNotifier(windowManager.isMaximized());
     windowManager.addListener(this);
   }
 
@@ -119,12 +121,10 @@ class _WindowTitleBarState extends State<_WindowTitleBar> with WindowListener {
           buttonColor: windowButtonColor,
           onTap: windowManager.minimize,
         ),
-        FutureBuilder(
-          future: windowManager.isMaximized(),
-          builder: (context, snapshot) => ValueListenableBuilder(
-            valueListenable: isMaximized,
-            builder: (context, isMaximized, child) {
-              isMaximized = isMaximized ??= snapshot.hasData && snapshot.data!;
+        ValueListenableBuilder(
+          valueListenable: isMaximized,
+          builder: (context, isMaximized, child) {
+            Widget builder(bool isMaximized) {
               if (isMaximized) {
                 return WindowButton.unmaximize(
                   buttonColor: windowButtonColor,
@@ -135,8 +135,19 @@ class _WindowTitleBarState extends State<_WindowTitleBar> with WindowListener {
                 buttonColor: windowButtonColor,
                 onTap: windowManager.maximize,
               );
-            },
-          ),
+            }
+
+            if (isMaximized is Future<bool>) {
+              return FutureBuilder(
+                future: isMaximized,
+                builder: (context, snapshot) {
+                  final isMaximized = snapshot.data ?? false;
+                  return builder(isMaximized);
+                },
+              );
+            }
+            return builder(isMaximized);
+          },
         ),
         WindowButton.close(
           buttonColor: closeWindowButtonColor,
