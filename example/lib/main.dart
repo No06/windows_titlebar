@@ -110,12 +110,17 @@ class _WindowTitleBarState extends State<_WindowTitleBar> with WindowListener {
       ),
       actions: [
         // Custom Button
-        const WindowButton(
-          icon: Icon(Icons.settings),
-          color: Colors.blue,
-          mouseOverColor: Colors.green,
-          mouseDownColor: Colors.amber,
+        WindowButton(
           animated: true,
+          buttonColor: const WindowButtonColor(
+            normal: Colors.blue,
+            mouseOver: Colors.green,
+            mouseDown: Colors.amber,
+            iconNormal: Colors.white,
+            iconMouseOver: Colors.grey,
+            iconMouseDown: Colors.blueGrey,
+          ),
+          builder: (context, color) => Icon(Icons.settings, color: color),
         ),
         WindowButton.minimize(
           buttonColor: windowButtonColor,

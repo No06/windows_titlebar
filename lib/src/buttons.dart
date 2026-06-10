@@ -1,175 +1,138 @@
 import 'package:flutter/material.dart';
-import 'package:windows_titlebar/src/color.dart';
-import 'package:windows_titlebar/src/icons.dart';
+import 'package:windows_titlebar/windows_titlebar.dart';
 
 const kWindowTitleBarHeight = 32.0;
+
+typedef WindowButtonBuilder = Widget Function(
+  BuildContext context,
+  Color color,
+);
 
 class WindowButton extends StatefulWidget {
   const WindowButton({
     super.key,
-    required this.icon,
     this.onTap,
-    this.color,
-    this.mouseOverColor,
-    this.mouseDownColor,
-    this.animated,
-    this.animatedTime,
-    this.constraints,
-  })  : _type = null,
-        buttonColor = null;
+    this.buttonColor = const WindowButtonColor.light(),
+    this.animated = false,
+    this.animationCurve = Curves.linear,
+    this.animationDuration = const Duration(milliseconds: 120),
+    this.constraints = const BoxConstraints(
+      minWidth: 46,
+      minHeight: kWindowTitleBarHeight,
+    ),
+    required this.builder,
+  });
 
-  const WindowButton.close({
-    super.key,
-    this.onTap,
-    this.buttonColor = const WindowButtonColor.closeLight(),
-    this.animated,
-    this.animatedTime,
-    this.constraints,
-  })  : _type = _ButtonType.close,
-        color = null,
-        mouseDownColor = null,
-        mouseOverColor = null,
-        icon = null;
-
-  const WindowButton.unmaximize({
+  WindowButton.close({
     super.key,
     this.onTap,
     this.buttonColor = const WindowButtonColor.light(),
-    this.animated,
-    this.animatedTime,
-    this.constraints,
-  })  : _type = _ButtonType.unmaximize,
-        color = null,
-        mouseDownColor = null,
-        mouseOverColor = null,
-        icon = null;
+    this.animated = false,
+    this.animationCurve = Curves.linear,
+    this.animationDuration = const Duration(milliseconds: 120),
+    this.constraints = const BoxConstraints(
+      minWidth: 46,
+      minHeight: kWindowTitleBarHeight,
+    ),
+  }) : builder = ((context, color) => CloseIcon(color: color));
 
-  const WindowButton.maximize({
+  WindowButton.unmaximize({
     super.key,
     this.onTap,
     this.buttonColor = const WindowButtonColor.light(),
-    this.animated,
-    this.animatedTime,
-    this.constraints,
-  })  : _type = _ButtonType.maximize,
-        color = null,
-        mouseDownColor = null,
-        mouseOverColor = null,
-        icon = null;
+    this.animated = false,
+    this.animationCurve = Curves.linear,
+    this.animationDuration = const Duration(milliseconds: 120),
+    this.constraints = const BoxConstraints(
+      minWidth: 46,
+      minHeight: kWindowTitleBarHeight,
+    ),
+  }) : builder = ((context, color) => RestoreIcon(color: color));
 
-  const WindowButton.minimize({
+  WindowButton.maximize({
     super.key,
     this.onTap,
     this.buttonColor = const WindowButtonColor.light(),
-    this.animated,
-    this.animatedTime,
-    this.constraints,
-  })  : _type = _ButtonType.minimize,
-        color = null,
-        mouseOverColor = null,
-        mouseDownColor = null,
-        icon = null;
+    this.animated = false,
+    this.animationCurve = Curves.linear,
+    this.animationDuration = const Duration(milliseconds: 120),
+    this.constraints = const BoxConstraints(
+      minWidth: 46,
+      minHeight: kWindowTitleBarHeight,
+    ),
+  }) : builder = ((context, color) => MaximizeIcon(color: color));
 
-  final Widget? icon;
+  WindowButton.minimize({
+    super.key,
+    this.onTap,
+    this.buttonColor = const WindowButtonColor.light(),
+    this.animated = false,
+    this.animationCurve = Curves.linear,
+    this.animationDuration = const Duration(milliseconds: 120),
+    this.constraints = const BoxConstraints(
+      minWidth: 46,
+      minHeight: kWindowTitleBarHeight,
+    ),
+  }) : builder = ((context, color) => MinimizeIcon(color: color));
+
   final VoidCallback? onTap;
-  final Color? color;
-  final Color? mouseOverColor;
-  final Color? mouseDownColor;
-  final WindowButtonColor? buttonColor;
-  final bool? animated;
-  final int? animatedTime;
-  final _ButtonType? _type;
-  final BoxConstraints? constraints;
+  final WindowButtonColor buttonColor;
+  final bool animated;
+  final Duration animationDuration;
+  final Curve animationCurve;
+  final BoxConstraints constraints;
+  final WindowButtonBuilder builder;
 
   @override
   State<WindowButton> createState() => _WindowButtonState();
 }
 
 class _WindowButtonState extends State<WindowButton> {
-  Duration get _duration => widget.animated ?? false
-      ? Duration(milliseconds: widget.animatedTime ?? 120)
-      : Duration.zero;
-
-  final state = _ButtonState();
+  var _isHover = false;
+  var _isTapDown = false;
 
   @override
   Widget build(BuildContext context) {
-    final buttonColor = widget.buttonColor ?? const WindowButtonColor.light();
+    final backgroundColor = _isTapDown
+        ? widget.buttonColor.mouseDown
+        : _isHover
+            ? widget.buttonColor.mouseOver
+            : widget.buttonColor.normal;
+    final iconColor = _isTapDown
+        ? widget.buttonColor.iconMouseDown
+        : _isHover
+            ? widget.buttonColor.iconMouseOver
+            : widget.buttonColor.iconNormal;
 
-    backgroundColor() {
-      if (state.onTap) {
-        return widget.mouseDownColor ?? buttonColor.mouseDown;
-      }
-      if (state.isHover) {
-        return widget.mouseOverColor ?? buttonColor.mouseOver;
-      }
-      return widget.color ?? buttonColor.normal;
-    }
-
-    iconColor() {
-      if (state.onTap) return buttonColor.iconMouseDown;
-      if (state.isHover) return buttonColor.iconMouseOver;
-      return buttonColor.iconNormal;
-    }
-
-    defaultIcon() {
-      switch (widget._type!) {
-        case _ButtonType.close:
-          return CloseIcon(color: iconColor());
-        case _ButtonType.unmaximize:
-          return RestoreIcon(color: iconColor());
-        case _ButtonType.maximize:
-          return MaximizeIcon(color: iconColor());
-        case _ButtonType.minimize:
-          return MinimizeIcon(color: iconColor());
-      }
+    final Widget icon;
+    if (widget.animated) {
+      icon = TweenAnimationBuilder(
+        tween: ColorTween(end: iconColor),
+        duration: widget.animationDuration,
+        builder: (context, color, child) =>
+            widget.builder(context, color ?? iconColor),
+      );
+    } else {
+      icon = Builder(builder: (context) => widget.builder(context, iconColor));
     }
 
     return MouseRegion(
-      onExit: (value) => state.isHover = false,
-      onHover: (value) => state.isHover = true,
+      onExit: (value) => setState(() => _isHover = false),
+      onHover: (value) => setState(() => _isHover = true),
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTapDown: (_) => state.onTap = true,
-        onTapCancel: () => state.onTap = false,
-        onTapUp: (_) => state.onTap = false,
+        onTapDown: (_) => setState(() => _isTapDown = true),
+        onTapCancel: () => setState(() => _isTapDown = false),
+        onTapUp: (_) => setState(() => _isTapDown = false),
         onTap: widget.onTap,
-        child: ListenableBuilder(
-          listenable: state,
-          builder: (context, child) => AnimatedContainer(
-            duration: _duration,
-            curve: Curves.linear,
-            color: backgroundColor(),
-            constraints: widget.constraints ??
-                const BoxConstraints(
-                    minWidth: 46, minHeight: kWindowTitleBarHeight),
-            child: Center(child: widget.icon ?? defaultIcon()),
-          ),
+        child: AnimatedContainer(
+          duration: widget.animationDuration,
+          curve: widget.animationCurve,
+          color: backgroundColor,
+          constraints: widget.constraints,
+          child: Center(child: icon),
         ),
       ),
     );
   }
-}
-
-class _ButtonState with ChangeNotifier {
-  var _isHover = false;
-  bool get isHover => _isHover;
-  set isHover(bool newVal) {
-    _isHover = newVal;
-    notifyListeners();
-  }
-
-  var _onTap = false;
-  bool get onTap => _onTap;
-  set onTap(bool newVal) {
-    _onTap = newVal;
-    notifyListeners();
-  }
-}
-
-enum _ButtonType {
-  close,
-  unmaximize,
-  maximize,
-  minimize,
 }
