@@ -1,48 +1,31 @@
 // Switched to CustomPaint icons by https://github.com/esDotDev
 
-import 'dart:math';
-
 import 'package:flutter/widgets.dart';
 
 /// Close
-class CloseIcon extends StatelessWidget {
-  const CloseIcon({super.key, required this.color});
+class CloseIcon extends _PaintIcon {
+  CloseIcon({super.key, required Color color})
+      : super(
+          size: const Size.square(10),
+          painter: _CloseIconPainter(color),
+        );
+}
 
-  final Color color;
+class _CloseIconPainter extends _IconPainter {
+  _CloseIconPainter(super.color);
 
   @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topLeft,
-      child: Stack(children: [
-        // Use rotated containers instead of a painter because it renders slightly crisper than a painter for some reason.
-        Transform.rotate(
-          angle: pi * .25,
-          child: Center(
-            child: ColoredBox(
-              color: color,
-              child: const SizedBox(width: 14, height: 1),
-            ),
-          ),
-        ),
-        Transform.rotate(
-          angle: pi * -.25,
-          child: Center(
-            child: ColoredBox(
-              color: color,
-              child: const SizedBox(width: 14, height: 1),
-            ),
-          ),
-        ),
-      ]),
-    );
+  void paint(Canvas canvas, Size size) {
+    canvas.drawLine(Offset.zero, Offset(size.width, size.height), p);
+    canvas.drawLine(Offset(0, size.height), Offset(size.width, 0), p);
   }
 }
 
 /// Maximize
 class MaximizeIcon extends _PaintIcon {
-  MaximizeIcon({super.key, required super.color})
+  MaximizeIcon({super.key, required Color color})
       : super(
+          size: const Size.square(9),
           painter: _MaximizePainter(color),
         );
 }
@@ -52,14 +35,15 @@ class _MaximizePainter extends _IconPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawRect(Rect.fromLTRB(1, 0, size.width, size.height - 1), p);
+    canvas.drawRect(Rect.fromLTRB(0, 0, size.width, size.height), p);
   }
 }
 
 /// Restore
 class RestoreIcon extends _PaintIcon {
-  RestoreIcon({super.key, required super.color})
+  RestoreIcon({super.key, required Color color})
       : super(
+          size: const Size.square(10),
           painter: _RestorePainter(color),
         );
 }
@@ -90,53 +74,54 @@ class _RestorePainter extends _IconPainter {
 
 /// Minimize
 class MinimizeIcon extends _PaintIcon {
-  MinimizeIcon({super.key, required super.color})
+  MinimizeIcon({super.key, required Color color})
       : super(
-          painter: _MinimizePainter(color),
+          size: const Size(10, 1),
+          painter: _MinimizeIconPainter(color),
         );
 }
 
-class _MinimizePainter extends _IconPainter {
-  _MinimizePainter(super.color);
+class _MinimizeIconPainter extends _IconPainter {
+  _MinimizeIconPainter(super.color);
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawLine(
-      Offset(0, size.height / 2),
-      Offset(size.width + 0.1, size.height / 2),
-      p,
-    );
+    canvas.drawLine(Offset(0, size.height), Offset(size.width, size.height), p);
   }
 }
 
 /// Helpers
 abstract class _IconPainter extends CustomPainter {
-  _IconPainter(this.color) : p = _getPaint(color);
+  _IconPainter(this.color)
+      : p = Paint()
+          ..color = color
+          ..style = PaintingStyle.stroke
+          ..isAntiAlias = false
+          ..strokeWidth = 1;
 
   final Color color;
   final Paint p;
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) =>
+      color != (oldDelegate as _IconPainter).color;
 }
 
 class _PaintIcon extends StatelessWidget {
-  const _PaintIcon({super.key, required this.color, required this.painter});
+  const _PaintIcon({
+    super.key,
+    required this.size,
+    required this.painter,
+  });
 
-  final Color color;
-  final CustomPainter painter;
+  final Size size;
+  final _IconPainter painter;
 
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.center,
-      child: CustomPaint(size: const Size(10, 10), painter: painter),
+      child: CustomPaint(size: size, painter: painter),
     );
   }
 }
-
-Paint _getPaint(Color color, [bool isAntiAlias = false]) => Paint()
-  ..color = color
-  ..style = PaintingStyle.stroke
-  ..isAntiAlias = isAntiAlias
-  ..strokeWidth = 1;
